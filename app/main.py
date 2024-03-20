@@ -1,6 +1,5 @@
 import socket
 
-
 def main():
     
     print("Logs from your program will appear here!")
@@ -10,14 +9,18 @@ def main():
     
     while True:
         try:
-             buf, source = udp_socket.recvfrom(512)
-    
-             response = b"\x04\xd2\x80" + (b"\x00"*9)
-             udp_socket.sendto(response, source)
+            buf, source = udp_socket.recvfrom(512)
+            rid = b"\x04\xd2"
+            rflags = b"\x80\x00"
+            qdcount = b"\x00\x01"
+            header = rid + rflags + qdcount + (b"\x00"*6)
+            question = b"\x0ccodecrafters\x02io\x00\x00\x01\x00\x01"
+            response = header+question
+            
+            udp_socket.sendto(response, source)
         except Exception as e:
-             print(f"Error receiving data: {e}")
-             break
-
+            print(f"Error receiving data: {e}")
+            break
 
 if __name__ == "__main__":
     main()
