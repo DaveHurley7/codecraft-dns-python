@@ -38,7 +38,7 @@ def main():
             data_len = b"\x00\x04"
             answer = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01" + ttl + data_len + data
             response = header+question+answer
-            
+            print(response)
             udp_socket.sendto(response, source)
         except Exception as e:
             print(f"Error receiving data: {e}")
