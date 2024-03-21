@@ -31,6 +31,7 @@ def main():
             header = c_id + flags + qdcount + ancount + nscount + arcount
             
             qsectlabel_end = buf.index(b"\x00",12)
+            print(buf[12:qsectlabel_end])
             
             question = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01"
             ttl = b"\x00\x00\x00\x3c"
@@ -38,7 +39,6 @@ def main():
             data_len = b"\x00\x04"
             answer = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01" + ttl + data_len + data
             response = header+question+answer
-            print(response)
             udp_socket.sendto(response, source)
         except Exception as e:
             print(f"Error receiving data: {e}")
