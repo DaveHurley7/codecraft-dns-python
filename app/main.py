@@ -36,7 +36,7 @@ def main():
             ttl = b"\x00\x00\x00\x3c"
             data = b"\x08\x08\x08\x08"
             data_len = b"\x00\x04"
-            answer = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01" + ttl + data_length + data
+            answer = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01" + ttl + data_len + data
             response = header+question+answer
             
             udp_socket.sendto(response, source)
