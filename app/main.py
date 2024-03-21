@@ -30,8 +30,7 @@ def main():
             arcount = b"\x00\x00"
             header = c_id + flags + qdcount + ancount + nscount + arcount
             
-            qsectlabel_end = buf.index(b"\x00",12)
-            print(buf[12:qsectlabel_end])
+            qsectlabel_end = buf.index(b"\x00",12)+1
             
             question = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01"
             ttl = b"\x00\x00\x00\x3c"
