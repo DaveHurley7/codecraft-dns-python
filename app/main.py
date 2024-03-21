@@ -12,15 +12,15 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             c_hdr = buf[:12]
             c_id = c_hdr[:2]
-            c_flags = c_hdr[2:4]
-            qr = b"\x80\x00"
-            opcode = c_flags & b"\x78\x00"
-            aa = b"\x00\x00"
-            tc = b"\x00\x00"
-            rd = c_flags & b"\x01\x00"
-            ra = b"\x00\x00"
-            rsv = b"\x00\x00"
-            rcode = b"\x00\x00"
+            c_flags = int.from_bytes(c_hdr[2:4])
+            qr = 0x8000
+            opcode = c_flags & 0x7800
+            aa = 0
+            tc = 0
+            rd = c_flags & 0x0100
+            ra = 0
+            rsv = 0
+            rcode = 0
             flags = qr|opcode|aa|tc|rd|ra|rsv|rcode
             
             qdcount = b"\x00\x01"
