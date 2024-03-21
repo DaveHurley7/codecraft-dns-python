@@ -22,6 +22,7 @@ def main():
             rsv = 0
             rcode = 0
             flags = qr|opcode|aa|tc|rd|ra|rsv|rcode
+            flags = flags.to_bytes(2)
             
             qdcount = b"\x00\x01"
             ancount = b"\x00\x01"
