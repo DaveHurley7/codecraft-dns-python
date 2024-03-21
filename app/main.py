@@ -20,7 +20,7 @@ def main():
             rd = c_flags & 0x0100
             ra = 0
             rsv = 0
-            rcode = 0
+            rcode = 4
             flags = qr|opcode|aa|tc|rd|ra|rsv|rcode
             flags = flags.to_bytes(2)
             
