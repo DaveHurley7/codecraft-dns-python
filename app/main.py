@@ -29,11 +29,14 @@ def main():
             nscount = b"\x00\x00"
             arcount = b"\x00\x00"
             header = c_id + flags + qdcount + ancount + nscount + arcount
-            question = b"\x0ccodecrafters\x02io\x00\x00\x01\x00\x01"
+            
+            qsectlabel_end = buf.index(b"\x00",12)
+            
+            question = buf[12:qsectlabl_end] + "\x00\x01\x00\x01"
             ttl = b"\x00\x00\x00\x3c"
             data = b"\x08\x08\x08\x08"
             data_len = b"\x00\x04"
-            answer = b"\x0ccodecrafters\x02io\x00\x00\x01\x00\x01"+ttl+data_len+data
+            answer = buf[12:qsectlabl_end] + "\x00\x01\x00\x01" + ttl + data_length + data
             response = header+question+answer
             
             udp_socket.sendto(response, source)
