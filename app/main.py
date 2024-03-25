@@ -85,10 +85,10 @@ def main():
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
             rsp.set_pid(dmsg.get_pid())
-            rsp.set_flag(QR)
-            rsp.set_flag(OPCODE,dmsg.get_flags())
-            rsp.set_flag(RD,dmsg.get_flags())
-            rsp.set_flag(RCODE)
+            rsp.set_flag(dmsg.QR)
+            rsp.set_flag(dmsg.OPCODE,dmsg.get_flags())
+            rsp.set_flag(dmsg.RD,dmsg.get_flags())
+            rsp.set_flag(dmsg.RCODE)
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
             
