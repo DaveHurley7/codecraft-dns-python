@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Local python interpreter
+build_local.sh
+
 # Distribution / packaging
 .Python
 build/

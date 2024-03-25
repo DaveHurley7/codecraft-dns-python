@@ -49,7 +49,7 @@ class DNSMessage:
         return self.flags
     
     def set_pid(self,pid):
-        self.buf[:2] = pid
+        self.pid = pid
         
     def add_q(self,qbuf):
         self.qtns.append(qbuf)
