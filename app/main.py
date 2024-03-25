@@ -14,7 +14,7 @@ class DNSMessage:
             self.qd_num = int.from_bytes(buffer[4:6])
             self.an_num = int.from_bytes(buffer[6:8])
             self.ns_num = int.from_bytes(buffer[8:10])
-            self.ar_num - int.from_bytes(buffer[10:12])
+            self.ar_num = int.from_bytes(buffer[10:12])
         else:
             self.buf = b"\x00"*12
             self.pid = b"\x00\x00"
