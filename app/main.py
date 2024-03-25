@@ -56,8 +56,10 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
-        ttl = 60.to_bytes(4)
-        dlen = 4.to_bytes(2)
+        ttlv = 60
+        ttl = ttlv.to_bytes(4)
+        dlenv = 4
+        dlen = dlenv.to_bytes(2)
         data = b"\x08\x08\x08"+ipbyte.to_bytes(1)
         ipbyte += 1
         self.awrs.append(qbuf+ttl+dlen+data)
