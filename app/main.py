@@ -1,5 +1,75 @@
 import socket
 
+class DNSMessage:
+    QR = 0
+    OPCODE = 1
+    RD = 2
+    RCODE = 3
+    ipbyte = 8
+    def __init__(self,buffer=None):
+        if buffer:
+            self.buf = buffer
+            self.pid = buffer[:2]
+            self.flags = int.from_bytes(buffer[2:4])
+            self.qd_num = int.from_bytes(buffer[4:6])
+            self.an_num = int.from_bytes(buffer[6:8])
+            self.ns_num = int.from_bytes(buffer[8:10])
+            self.ar_num - int.from_bytes(buffer[10:12])
+        else:
+            self.buf = b"\x00"*12
+            self.pid = b"\x00\x00"
+            self.flags = 0
+            self.qd_num = 0
+            self.an_num = 0
+            self.ns_num = 0
+            self.ar_num = 0
+        self.qtns = []
+        self.awrs = []
+        
+    def get_header(self):
+        return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
+    
+    def get_pid(self):
+        return self.pid
+    
+    def set_flag(self,fname,val=None):
+        if fname == QR:
+            self.flags |= 0x8000
+        elif fname == OPCODE:
+            self.flags |= val & 0x7800
+        elif fname == RD:
+            self.flags |= val & 0x0100
+        elif fname == RCODE:
+            self.flags = 0 if get_opcode() == 0 else 4
+            
+    def get_opcode(self):
+        return self.flags & 0x7800
+    
+    def get_flags(self):
+        return self.flags
+    
+    def set_pid(self,pid):
+        self.buf[:2] = pid
+        
+    def add_q(self,qbuf):
+        self.qtns.append(qbuf)
+        self.qd_num += 1
+        
+    def add_a(self,qbuf):
+        ttl = 60.to_bytes(4)
+        dlen = 4.to_bytes(2)
+        data = b"\x08\x08\x08"+ipbyte.to_bytes(1)
+        ipbyte += 1
+        self.awrs.append(qbuf+ttl+dlen+data)
+        self.an_num += 1
+        
+    def make_msg(self):
+        msg = self.get_header()
+        for qa in range(self.qd_num):
+            msg += self.qtns[qa]
+            msg += self.awrs[qa]
+        
+
 def main():
     
     print("Logs from your program will appear here!")
@@ -10,34 +80,44 @@ def main():
     while True:
         try:
             buf, source = udp_socket.recvfrom(512)
-            c_hdr = buf[:12]
-            c_id = c_hdr[:2]
-            c_flags = int.from_bytes(c_hdr[2:4])
-            qr = 0x8000
-            opcode = c_flags & 0x7800
-            aa = 0
-            tc = 0
-            rd = c_flags & 0x0100
-            ra = 0
-            rsv = 0
-            rcode = 0 if opcode == 0 else 4
-            flags = qr|opcode|aa|tc|rd|ra|rsv|rcode
-            flags = flags.to_bytes(2)
+            dmsg = DNSMessage(buf)
+            rsp = DNSMessage()
+            rsp.set_pid(dmsg.get_pid())
+            rsp.set_flag(QR)
+            rsp.set_flag(OPCODE,dmsg.get_flags())
+            rsp.set_flag(RD,dmsg.get_flags())
+            rsp.set_flag(RCODE)
+            rsp.qd_num = dmsg.qd_num
+            rsp.an_num = dmsg.qd_num
             
-            qdcount = b"\x00\x01"
-            ancount = b"\x00\x01"
-            nscount = b"\x00\x00"
-            arcount = b"\x00\x00"
-            header = c_id + flags + qdcount + ancount + nscount + arcount
-            
-            qsectlabel_end = buf.index(b"\x00",12)+1
-            
-            question = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01"
-            ttl = b"\x00\x00\x00\x3c"
-            data = b"\x08\x08\x08\x08"
-            data_len = b"\x00\x04"
-            answer = buf[12:qsectlabel_end] + b"\x00\x01\x00\x01" + ttl + data_len + data
-            response = header+question+answer
+            bpos = 12
+            qd_buf = b""
+            for _ in range(dmsg.qd_num):
+                if buf[bpos] == b"\x00":
+                    qd_buf += buf[bpos:bpos+5]
+                    bpos += 5
+                    rsp.add_q(qd_buf)
+                    rsp.add_a(qd_buf)
+                elif int.from_bytes(buf[bpos]) & 0xc0:
+                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                    qd_ptr = int.to_bytes(buf[msg_offset])
+                    qd_buf += buf[msg_offset]
+                    msg_offset += 1
+                    c = 0
+                    while c < qd_ptr:
+                        qd_buf += buf[msg_offset]
+                        c += 1
+                    bpos += 2
+                else:
+                    lb_len = int.from_bytes(buf[bpos])
+                    bpos += 1
+                    c = 0
+                    while c < lb_len:
+                        qd_buf += buf[bpos]
+                        c += 1
+                        bpos += 1
+                        
+            response = rsp.make_msg()
             udp_socket.sendto(response, source)
         except Exception as e:
             print(f"Error receiving data: {e}")
