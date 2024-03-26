@@ -110,6 +110,7 @@ def main():
                     msg_offset += 1
                     c = 0
                     while c < qd_ptr:
+                        print("LPLOOP")
                         qd_buf += buf[msg_offset]
                         c += 1
                     bpos += 2
@@ -118,6 +119,7 @@ def main():
                     bpos += 1
                     c = 0
                     while c < lb_len:
+                        print('DLLOOP')
                         qd_buf += buf[bpos].to_bytes(1)
                         c += 1
                         bpos += 1
