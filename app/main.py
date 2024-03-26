@@ -96,10 +96,6 @@ def main():
             
             bpos = 12
             qd_buf = b""
-            x = b"\x01\x02\x00"
-            print("B")
-            print(x[2].to_bytes(1))
-            print("A")
             for _ in range(dmsg.qd_num):
                 print(len(buf),bpos,buf[bpos:bpos+1])
                 if buf[bpos] == b"\x00":
@@ -124,6 +120,7 @@ def main():
                     c = 0
                     while c < lb_len:
                         print('DLLOOP')
+                        print(bpos,c)
                         qd_buf += buf[bpos].to_bytes(1)
                         c += 1
                         bpos += 1
