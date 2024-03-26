@@ -96,17 +96,13 @@ def main():
             
             bpos = 12+1
             qd_buf = b""
-            x = b"\x00\x0f"
-            print(x[1:],x[1])
             for _ in range(dmsg.qd_num):
-                v = buf[bpos]
-                print(buf[bpos],type(buf),type(v))
                 if buf[bpos] == b"\x00":
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
                     rsp.add_q(qd_buf)
                     rsp.add_a(qd_buf)
-                elif int.from_bytes(buf[bpos]) & 0xc0:
+                elif buf[bpos] & 0xc0:
                     msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                     qd_ptr = msg_offset.to_bytes(2)
                     qd_buf += buf[msg_offset]
