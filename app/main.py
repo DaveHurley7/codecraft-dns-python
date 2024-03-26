@@ -45,7 +45,7 @@ class DNSMessage:
             self.flags = 0 if self.get_opcode() == 0 else 4
             
     def get_opcode(self):
-        return self.flags & 0x7800
+        return (self.flags & 0x7800) >> 11
     
     def get_flags(self):
         return self.flags
@@ -94,11 +94,13 @@ def main():
             rsp.set_flag(OPCODE,dmsg.get_flags())
             rsp.set_flag(RD,dmsg.get_flags())
             rsp.set_flag(RCODE)
+            print("SECT_NUMS")
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
             
             bpos = 12
             qd_buf = b""
+            print("PARSING QUESTION")
             for _ in range(dmsg.qd_num):
                 if buf[bpos] == b"\x00":
                     qd_buf += buf[bpos:bpos+5]
