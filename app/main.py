@@ -99,7 +99,7 @@ def main():
             for _ in range(dmsg.qd_num):
                 print("Buffer:",buf)
                 print(buf[bpos] == b"\x00")
-                print(buf[bpos])# & 0xc0)
+                print(buf[bpos],bpos)# & 0xc0)
                 if buf[bpos] == b"\x00":
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
