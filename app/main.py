@@ -28,6 +28,7 @@ class DNSMessage:
         self.awrs = []
         
     def get_header(self):
+        print("HDR")
         return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
     def get_pid(self):
@@ -57,6 +58,7 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
+        print("ANS")
         ttlv = 60
         ttl = ttlv.to_bytes(4)
         dlenv = 4
