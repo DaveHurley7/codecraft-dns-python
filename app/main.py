@@ -98,11 +98,13 @@ def main():
             qd_buf = b""
             for _ in range(dmsg.qd_num):
                 if buf[bpos] == b"\x00":
+                    print('NL')
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
                     rsp.add_q(qd_buf)
                     rsp.add_a(qd_buf)
                 elif buf[bpos] & 0xc0:
+                    print('LP')
                     msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                     qd_ptr = msg_offset.to_bytes(2)
                     qd_buf += buf[msg_offset]
@@ -113,6 +115,7 @@ def main():
                         c += 1
                     bpos += 2
                 else:
+                    print('DL')
                     lb_len = buf[bpos]
                     bpos += 1
                     c = 0
