@@ -57,6 +57,7 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
+        print("Making answer")
         ttlv = 60
         ttl = ttlv.to_bytes(4)
         dlenv = 4
@@ -64,6 +65,7 @@ class DNSMessage:
         data = b"\x08\x08\x08"+ipbyte.to_bytes(1)
         ipbyte += 1
         self.awrs.append(qbuf+ttl+dlen+data)
+        print("Answer made")
         self.an_num += 1
         
     def make_msg(self):
