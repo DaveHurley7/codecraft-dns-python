@@ -62,6 +62,7 @@ class DNSMessage:
         
     def make_msg(self):
         msg = self.get_header()
+        print("MAKING MESSAGE")
         for q in self.qtns:
             msg += q
         for a in self.awrs:
@@ -91,6 +92,7 @@ def main():
             
             bpos = 12
             qd_buf = b""
+            print("PARSING Q")
             for _ in range(dmsg.qd_num):
                 while buf[bpos] != b"\x00":
                     if buf[bpos] & 0xc0:
