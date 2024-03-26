@@ -42,9 +42,6 @@ class DNSMessage:
             
     def get_opcode(self):
         return (self.flags & 0x7800) >> 11
-    
-    def set_pid(self,pid):
-        self.pid = pid
         
     def add_q(self,qbuf):
         self.qtns.append(qbuf)
@@ -86,8 +83,8 @@ def main():
             rsp = DNSMessage()
             rsp.pid = dmsg.pid
             rsp.set_flag(QR)
-            rsp.set_flag(OPCODE,dmsg.flags())
-            rsp.set_flag(RD,dmsg.flags())
+            rsp.set_flag(OPCODE,dmsg.flags)
+            rsp.set_flag(RD,dmsg.flags)
             rsp.set_flag(RCODE)
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
