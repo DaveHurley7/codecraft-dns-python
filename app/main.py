@@ -94,7 +94,7 @@ def main():
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
             
-            bpos = 12
+            bpos = 12+1
             qd_buf = b""
             x = b"\x00\x0f"
             print(x[1:],x[:])
