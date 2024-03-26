@@ -1,10 +1,11 @@
 import socket
 
+QR = 0
+OPCODE = 1
+RD = 2
+RCODE = 3
+
 class DNSMessage:
-    QR = 0
-    OPCODE = 1
-    RD = 2
-    RCODE = 3
     ipbyte = 8
     def __init__(self,buffer=None):
         if buffer:
@@ -84,11 +85,12 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
+            print(DNSMessage.QR)
             rsp.set_pid(dmsg.get_pid())
-            rsp.set_flag(dmsg.QR)
-            rsp.set_flag(dmsg.OPCODE,dmsg.get_flags())
-            rsp.set_flag(dmsg.RD,dmsg.get_flags())
-            rsp.set_flag(dmsg.RCODE)
+            rsp.set_flag(QR)
+            rsp.set_flag(OPCODE,dmsg.get_flags())
+            rsp.set_flag(RD,dmsg.get_flags())
+            rsp.set_flag(RCODE)
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
             
