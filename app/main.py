@@ -99,11 +99,13 @@ def main():
                         print("LP")
                         msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                         qd_ptr = msg_offset.to_bytes(2)
+                        print("MO",msg_offset)
                         qd_buf += buf[msg_offset]
                         msg_offset += 1
                         c = 0
                         while c < qd_ptr:
-                            qd_buf += buf[msg_offset]
+                            print("SP",msg_offset)
+                            qd_buf += buf[msg_offset].to_bytes(1)
                             c += 1
                         bpos += 2
                     else:
