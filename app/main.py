@@ -69,11 +69,11 @@ class DNSMessage:
         
     def make_msg(self):
         msg = self.get_header()
-        print("adding info")
         for q in self.qtns:
             msg += q
         for a in self.awrs:
             msg += a
+        return msg
         
 
 def main():
@@ -99,7 +99,6 @@ def main():
             bpos = 12
             qd_buf = b""
             for _ in range(dmsg.qd_num):
-                print(len(buf),bpos,buf[bpos:bpos+1])
                 if buf[bpos] == b"\x00":
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
@@ -125,6 +124,7 @@ def main():
                         bpos += 1
                         
             response = rsp.make_msg()
+            print(response)
             udp_socket.sendto(response, source)
         except Exception as e:
             print(f"Error receiving data: {e}")
