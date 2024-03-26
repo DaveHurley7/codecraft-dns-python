@@ -104,6 +104,7 @@ def main():
                 if buf[bpos] == b"\x00":
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
+                    print("HELLO")
                     rsp.add_q(qd_buf)
                     rsp.add_a(qd_buf)
                 elif buf[bpos] & 0xc0:
