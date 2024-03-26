@@ -97,7 +97,7 @@ def main():
             bpos = 12
             qd_buf = b""
             for _ in range(dmsg.qd_num):
-                print(len(buf),bpos,buf[bpos])
+                print(len(buf),bpos,buf[bpos:bpos+1])
                 if buf[bpos] == b"\x00":
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
