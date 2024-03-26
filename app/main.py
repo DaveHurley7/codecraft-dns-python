@@ -120,10 +120,12 @@ def main():
                     bpos += 1
                     c = 0
                     while c < lb_len:
+                        print("SC")
                         print(buf[bpos].to_bytes(1))
                         qd_buf += buf[bpos].to_bytes(1)
                         c += 1
                         bpos += 1
+                        print("SO")
                         
             response = rsp.make_msg()
             udp_socket.sendto(response, source)
