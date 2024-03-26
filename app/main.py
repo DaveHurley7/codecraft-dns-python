@@ -119,9 +119,8 @@ def main():
                     lb_len = buf[bpos]
                     bpos += 1
                     c = 0
-                    print(bpos,buf)
                     while c < lb_len:
-                        print(c,lb_len)
+                        print(buf[bpos].to_bytes(1))
                         qd_buf += buf[bpos].to_bytes(1)
                         c += 1
                         bpos += 1
