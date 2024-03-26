@@ -98,6 +98,7 @@ def main():
             qd_buf = b""
             print("PARSING QUESTION")
             for _ in range(dmsg.qd_num):
+                print("IN LOOP")
                 if buf[bpos] == b"\x00":
                     print("NULL BYTE")
                     qd_buf += buf[bpos:bpos+5]
