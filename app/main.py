@@ -55,6 +55,7 @@ class DNSMessage:
     def add_q(self,qbuf):
         self.qtns.append(qbuf)
         self.qd_num += 1
+        print("added to qd")
         
     def add_a(self,qbuf):
         print("ANS")
@@ -66,6 +67,7 @@ class DNSMessage:
         ipbyte += 1
         self.awrs.append(qbuf+ttl+dlen+data)
         self.an_num += 1
+        print("added to an")
         
     def make_msg(self):
         msg = self.get_header()
