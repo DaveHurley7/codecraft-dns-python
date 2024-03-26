@@ -30,9 +30,6 @@ class DNSMessage:
     def get_header(self):
         return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
-    def get_pid(self):
-        return self.pid
-    
     def set_flag(self,fname,val=None):
         if fname == QR:
             self.flags |= 0x8000
@@ -45,9 +42,6 @@ class DNSMessage:
             
     def get_opcode(self):
         return (self.flags & 0x7800) >> 11
-    
-    def get_flags(self):
-        return self.flags
     
     def set_pid(self,pid):
         self.pid = pid
@@ -90,10 +84,10 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
-            rsp.set_pid(dmsg.get_pid())
+            rsp.pid = dmsg.pid
             rsp.set_flag(QR)
-            rsp.set_flag(OPCODE,dmsg.get_flags())
-            rsp.set_flag(RD,dmsg.get_flags())
+            rsp.set_flag(OPCODE,dmsg.flags())
+            rsp.set_flag(RD,dmsg.flags())
             rsp.set_flag(RCODE)
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
@@ -101,30 +95,29 @@ def main():
             bpos = 12
             qd_buf = b""
             for _ in range(dmsg.qd_num):
-                if buf[bpos] == b"\x00":
-                    qd_buf += buf[bpos:bpos+5]
-                    bpos += 5
-                    print("HELLO")
-                    rsp.add_q(qd_buf)
-                    rsp.add_a(qd_buf)
-                elif buf[bpos] & 0xc0:
-                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
-                    qd_ptr = msg_offset.to_bytes(2)
-                    qd_buf += buf[msg_offset]
-                    msg_offset += 1
-                    c = 0
-                    while c < qd_ptr:
+                while buf[bpos] != b"\x00":
+                    if buf[bpos] & 0xc0:
+                        msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                        qd_ptr = msg_offset.to_bytes(2)
                         qd_buf += buf[msg_offset]
-                        c += 1
-                    bpos += 2
-                else:
-                    lb_len = buf[bpos]
-                    bpos += 1
-                    c = 0
-                    while c < lb_len:
-                        qd_buf += buf[bpos].to_bytes(1)
-                        c += 1
+                        msg_offset += 1
+                        c = 0
+                        while c < qd_ptr:
+                            qd_buf += buf[msg_offset]
+                            c += 1
+                        bpos += 2
+                    else:
+                        lb_len = buf[bpos]
                         bpos += 1
+                        c = 0
+                        while c < lb_len:
+                            qd_buf += buf[bpos].to_bytes(1)
+                            c += 1
+                        bpos += 1
+                qd_buf += buf[bpos:bpos+5]
+                bpos += 5
+                rsp.add_q(qd_buf)
+                rsp.add_a(qd_buf)
                         
             response = rsp.make_msg()
             print(response)
