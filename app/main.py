@@ -96,19 +96,16 @@ def main():
             
             bpos = 12
             qd_buf = b""
-            print("PARSING QUESTION")
             for _ in range(dmsg.qd_num):
-                print("IN LOOP")
+                print("Buffer:",buf)
                 print(buf[bpos] == b"\x00")
                 print(buf[bpos])# & 0xc0)
                 if buf[bpos] == b"\x00":
-                    print("NULL BYTE")
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
                     rsp.add_q(qd_buf)
                     rsp.add_a(qd_buf)
                 elif int.from_bytes(buf[bpos]) & 0xc0:
-                    print("LABEL POINTER")
                     msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                     qd_ptr = msg_offset.to_bytes(2)
                     qd_buf += buf[msg_offset]
