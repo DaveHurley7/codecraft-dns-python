@@ -113,8 +113,7 @@ def main():
                         c += 1
                     bpos += 2
                 else:
-                    print("DIRECT LABEL")
-                    lb_len = int.from_bytes(buf[bpos])
+                    lb_len = buf[bpos]
                     bpos += 1
                     c = 0
                     while c < lb_len:
