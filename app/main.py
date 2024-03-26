@@ -113,7 +113,9 @@ def main():
                             qd_buf += buf[bpos].to_bytes(1)
                             c += 1
                         bpos += 1
+                print("TRY")
                 qd_buf += buf[bpos:bpos+5]
+                print("HERE")
                 bpos += 5
                 rsp.add_q(qd_buf)
                 rsp.add_a(qd_buf)
