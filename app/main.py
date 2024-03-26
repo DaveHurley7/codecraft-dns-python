@@ -103,7 +103,7 @@ def main():
                     rsp.add_q(qd_buf)
                     rsp.add_a(qd_buf)
                 elif buf[bpos] & 0xc0:
-                    msg_offset = int.from_bytes(buf[bpos:bpos+2] & 0x3fff
+                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                     qd_ptr = msg_offset.to_bytes(2)
                     qd_buf += buf[msg_offset]
                     msg_offset += 1
