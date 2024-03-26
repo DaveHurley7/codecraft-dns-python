@@ -57,15 +57,13 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
-        print("Making answer")
         ttlv = 60
         ttl = ttlv.to_bytes(4)
         dlenv = 4
         dlen = dlenv.to_bytes(2)
-        data = b"\x08\x08\x08"+ipbyte.to_bytes(1)
+        data = b"\x08\x08\x08"+self.ipbyte.to_bytes(1)
         ipbyte += 1
         self.awrs.append(qbuf+ttl+dlen+data)
-        print("Answer made")
         self.an_num += 1
         
     def make_msg(self):
@@ -105,7 +103,7 @@ def main():
                     rsp.add_a(qd_buf)
                 elif int.from_bytes(buf[bpos]) & 0xc0:
                     msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
-                    qd_ptr = int.to_bytes(buf[msg_offset])
+                    qd_ptr = msg_offset.to_bytes(2)
                     qd_buf += buf[msg_offset]
                     msg_offset += 1
                     c = 0
