@@ -121,6 +121,8 @@ def main():
                     while c < lb_len:
                         print('DLLOOP')
                         print(bpos,c)
+                        print(buf[bpos].to_bytes(1))
+                        print("ENDED")
                         qd_buf += buf[bpos].to_bytes(1)
                         c += 1
                         bpos += 1
