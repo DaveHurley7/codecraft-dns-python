@@ -98,7 +98,7 @@ def main():
             qd_buf = b""
             x = b"\x01\x02\x00"
             print("B")
-            print(x[2])
+            print(x[2].to_bytes(1))
             print("A")
             for _ in range(dmsg.qd_num):
                 print(len(buf),bpos,buf[bpos:bpos+1])
