@@ -100,7 +100,7 @@ def main():
             for _ in range(dmsg.qd_num):
                 print("IN LOOP")
                 print(buf[bpos] == b"\x00")
-                print(type(int.from_bytes(buf[bpos])))# & 0xc0)
+                print(type(buf[bpos]))# & 0xc0)
                 if buf[bpos] == b"\x00":
                     print("NULL BYTE")
                     qd_buf += buf[bpos:bpos+5]
