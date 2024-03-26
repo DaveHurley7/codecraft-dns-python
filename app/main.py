@@ -94,7 +94,7 @@ def main():
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
             
-            bpos = 12+1
+            bpos = 12
             qd_buf = b""
             for _ in range(dmsg.qd_num):
                 if buf[bpos] == b"\x00":
