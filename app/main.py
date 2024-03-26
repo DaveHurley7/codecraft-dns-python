@@ -28,7 +28,6 @@ class DNSMessage:
         self.awrs = []
         
     def get_header(self):
-        print("HDR")
         return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
     def get_pid(self):
@@ -87,14 +86,11 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
-            print("PID")
             rsp.set_pid(dmsg.get_pid())
-            print("FLAGS")
             rsp.set_flag(QR)
             rsp.set_flag(OPCODE,dmsg.get_flags())
             rsp.set_flag(RD,dmsg.get_flags())
             rsp.set_flag(RCODE)
-            print("SECT_NUMS")
             rsp.qd_num = dmsg.qd_num
             rsp.an_num = dmsg.qd_num
             
@@ -103,11 +99,13 @@ def main():
             print("PARSING QUESTION")
             for _ in range(dmsg.qd_num):
                 if buf[bpos] == b"\x00":
+                    print("NULL BYTE")
                     qd_buf += buf[bpos:bpos+5]
                     bpos += 5
                     rsp.add_q(qd_buf)
                     rsp.add_a(qd_buf)
                 elif int.from_bytes(buf[bpos]) & 0xc0:
+                    print("LABEL POINTER")
                     msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                     qd_ptr = msg_offset.to_bytes(2)
                     qd_buf += buf[msg_offset]
@@ -118,6 +116,7 @@ def main():
                         c += 1
                     bpos += 2
                 else:
+                    print("DIRECT LABEL")
                     lb_len = int.from_bytes(buf[bpos])
                     bpos += 1
                     c = 0
