@@ -85,7 +85,6 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
-            print(DNSMessage.QR)
             rsp.set_pid(dmsg.get_pid())
             rsp.set_flag(QR)
             rsp.set_flag(OPCODE,dmsg.get_flags())
