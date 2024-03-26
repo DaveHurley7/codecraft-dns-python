@@ -69,7 +69,9 @@ class DNSMessage:
         
     def make_msg(self):
         msg = self.get_header()
+        print("adding info")
         for qa in range(self.qd_num):
+            print(qa)
             msg += self.qtns[qa]
             msg += self.awrs[qa]
         
@@ -110,7 +112,6 @@ def main():
                     msg_offset += 1
                     c = 0
                     while c < qd_ptr:
-                        print("LPLOOP")
                         qd_buf += buf[msg_offset]
                         c += 1
                     bpos += 2
@@ -119,10 +120,6 @@ def main():
                     bpos += 1
                     c = 0
                     while c < lb_len:
-                        print('DLLOOP')
-                        print(bpos,c)
-                        print(buf[bpos].to_bytes(1))
-                        print("ENDED")
                         qd_buf += buf[bpos].to_bytes(1)
                         c += 1
                         bpos += 1
