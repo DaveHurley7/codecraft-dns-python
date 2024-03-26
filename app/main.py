@@ -97,7 +97,7 @@ def main():
             bpos = 12+1
             qd_buf = b""
             x = b"\x00\x0f"
-            print(x[1:],x[:])
+            print(x[1:],x[1])
             for _ in range(dmsg.qd_num):
                 v = buf[bpos]
                 print(buf[bpos],type(buf),type(v))
