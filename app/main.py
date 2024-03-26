@@ -70,10 +70,10 @@ class DNSMessage:
     def make_msg(self):
         msg = self.get_header()
         print("adding info")
-        for qa in range(self.qd_num):
-            print(qa)
-            msg += self.qtns[qa]
-            msg += self.awrs[qa]
+        for q in self.qtns:
+            msg += q
+        for a in self.awrs:
+            msg += a
         
 
 def main():
