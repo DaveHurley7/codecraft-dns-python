@@ -56,7 +56,7 @@ class DNSMessage:
         print("Making IP Address")
         data = b"\x08\x08\x08"+self.ipbyte.to_bytes(1)
         print("Chaning IP")
-        ipbyte += 1
+        self.ipbyte += 1
         print("IPBYTE updated")
         self.awrs.append(qbuf+ttl+dlen+data)
         self.an_num += 1
