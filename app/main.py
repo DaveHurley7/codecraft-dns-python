@@ -48,6 +48,7 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
+        print("IPBYTE:",self.ipbyte)
         ttlv = 60
         ttl = ttlv.to_bytes(4)
         dlenv = 4
@@ -92,7 +93,6 @@ def main():
             qd_buf = b""
             for _ in range(dmsg.qd_num):
                 while buf[bpos]:
-                    print(buf[bpos].to_bytes(1))
                     if buf[bpos] & 0xc0:
                         msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                         qd_ptr = msg_offset.to_bytes(2)
