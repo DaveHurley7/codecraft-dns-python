@@ -53,8 +53,11 @@ class DNSMessage:
         ttl = ttlv.to_bytes(4)
         dlenv = 4
         dlen = dlenv.to_bytes(2)
+        print("Making IP Address")
         data = b"\x08\x08\x08"+self.ipbyte.to_bytes(1)
+        print("Chaning IP")
         ipbyte += 1
+        print("IPBYTE updated")
         self.awrs.append(qbuf+ttl+dlen+data)
         self.an_num += 1
         print("added to an")
