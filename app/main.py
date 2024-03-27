@@ -6,7 +6,6 @@ RD = 2
 RCODE = 3
 
 class DNSMessage:
-    ipbyte = 8
     def __init__(self,buffer=None):
         if buffer:
             self.buf = buffer
@@ -26,6 +25,7 @@ class DNSMessage:
             self.ar_num = 0
         self.qtns = []
         self.awrs = []
+        self.ipbyte = 8
         
     def get_header(self):
         return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
