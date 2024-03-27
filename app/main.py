@@ -118,7 +118,7 @@ def main():
                             print(buf[bpos])
                             qd_buf += buf[bpos].to_bytes(1)
                             c += 1
-                        bpos += 1
+                            bpos += 1
                 print("TRY")
                 qd_buf += buf[bpos:bpos+5]
                 print("HERE")
