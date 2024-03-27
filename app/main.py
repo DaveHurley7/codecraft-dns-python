@@ -112,6 +112,7 @@ def main():
                 bpos += 5
                 rsp.add_q(qd_buf)
                 rsp.add_a(qd_buf)
+                print(qd_buf)
                         
             response = rsp.make_msg()
             print(response)
