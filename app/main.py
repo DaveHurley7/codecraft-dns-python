@@ -46,10 +46,8 @@ class DNSMessage:
     def add_q(self,qbuf):
         self.qtns.append(qbuf)
         self.qd_num += 1
-        print("added to qd")
         
     def add_a(self,qbuf):
-        print("ANS")
         ttlv = 60
         ttl = ttlv.to_bytes(4)
         dlenv = 4
@@ -96,33 +94,24 @@ def main():
                 while buf[bpos]:
                     print(buf[bpos].to_bytes(1))
                     if buf[bpos] & 0xc0:
-                        print("LP")
-                        print(buf[bpos:bpos+2])
                         msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
                         qd_ptr = msg_offset.to_bytes(2)
-                        print("MO",msg_offset)
                         qd_buf += buf[msg_offset].to_bytes(1)
                         msg_offset += 1
                         c = 0
                         while c < qd_ptr:
-                            print("SP",msg_offset)
                             qd_buf += buf[msg_offset].to_bytes(1)
                             c += 1
                         bpos += 2
                     else:
-                        print("DL")
                         lb_len = buf[bpos]
                         bpos += 1
-                        start = bpos
                         c = 0
                         while c < lb_len:
                             qd_buf += buf[bpos].to_bytes(1)
                             c += 1
                             bpos += 1
-                        print(buf[start:bpos])
-                print("TRY")
                 qd_buf += buf[bpos:bpos+5]
-                print("HERE")
                 bpos += 5
                 rsp.add_q(qd_buf)
                 rsp.add_a(qd_buf)
