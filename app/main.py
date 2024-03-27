@@ -102,6 +102,7 @@ def main():
                         bpos += 2
                     else:
                         lb_len = buf[bpos]
+                        qd_buf += buf[bpos].to_bytes(1)
                         bpos += 1
                         c = 0
                         while c < lb_len:
