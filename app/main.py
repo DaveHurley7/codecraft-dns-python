@@ -48,7 +48,7 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
-        nonlocal self.ipbyte
+        nonlocal ipbyte
         print("IPBYTE:",self.ipbyte)
         ttlv = 60
         ttl = ttlv.to_bytes(4)
