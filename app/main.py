@@ -76,6 +76,7 @@ def main():
     while True:
         try:
             buf, source = udp_socket.recvfrom(512)
+            print("CL_MSG:",buf)
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
             rsp.pid = dmsg.pid
@@ -113,7 +114,6 @@ def main():
                 bpos += 5
                 rsp.add_q(qd_buf)
                 rsp.add_a(qd_buf)
-                print(qd_buf)
                         
             response = rsp.make_msg()
             print(response)
