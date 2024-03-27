@@ -48,23 +48,17 @@ class DNSMessage:
         self.qd_num += 1
         
     def add_a(self,qbuf):
-        print("IPBYTE:",self.ipbyte)
         ttlv = 60
         ttl = ttlv.to_bytes(4)
         dlenv = 4
         dlen = dlenv.to_bytes(2)
-        print("Making IP Address")
         data = b"\x08\x08\x08"+self.ipbyte.to_bytes(1)
-        print("Chaning IP")
         self.ipbyte += 1
-        print("IPBYTE updated")
         self.awrs.append(qbuf+ttl+dlen+data)
         self.an_num += 1
-        print("added to an")
         
     def make_msg(self):
         msg = self.get_header()
-        print("MAKING MESSAGE")
         for q in self.qtns:
             msg += q
         for a in self.awrs:
