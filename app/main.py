@@ -92,7 +92,6 @@ def main():
             
             bpos = 12
             qd_buf = b""
-            print("PARSING Q")
             for _ in range(dmsg.qd_num):
                 while buf[bpos] != b"\x00":
                     if buf[bpos] & 0xc0:
@@ -113,12 +112,13 @@ def main():
                         print("DL")
                         lb_len = buf[bpos]
                         bpos += 1
+                        start = bpos
                         c = 0
                         while c < lb_len:
-                            print(buf[bpos])
                             qd_buf += buf[bpos].to_bytes(1)
                             c += 1
                             bpos += 1
+                        print(buf[start:bpos])
                 print("TRY")
                 qd_buf += buf[bpos:bpos+5]
                 print("HERE")
