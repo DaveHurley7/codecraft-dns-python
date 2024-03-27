@@ -94,6 +94,7 @@ def main():
             qd_buf = b""
             for _ in range(dmsg.qd_num):
                 while buf[bpos] != b"\x00":
+                    print(buf[bpos].to_bytes(1))
                     if buf[bpos] & 0xc0:
                         print("LP")
                         print(buf[bpos:bpos+2])
@@ -116,7 +117,6 @@ def main():
                         c = 0
                         while c < lb_len:
                             qd_buf += buf[bpos].to_bytes(1)
-                            print("BYTE:",buf[bpos].to_bytes(1))
                             c += 1
                             bpos += 1
                         print(buf[start:bpos])
