@@ -90,12 +90,12 @@ def main():
             for _ in range(dmsg.qd_num):
                 while buf[bpos]:
                     if buf[bpos] & 0xc0:
-                        msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
-                        qd_ptr = msg_offset.to_bytes(2)
-                        qd_buf += buf[msg_offset].to_bytes(1)
+                        msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff  #Get offset from pointer structure
+                        qd_len = buf[msg_offset]
+                        qd_buf += qd_len.to_bytes(1)
                         msg_offset += 1
                         c = 0
-                        while c < qd_ptr:
+                        while c < qd_len:
                             qd_buf += buf[msg_offset].to_bytes(1)
                             c += 1
                         bpos += 2
@@ -112,6 +112,7 @@ def main():
                 bpos += 5
                 rsp.add_q(qd_buf)
                 rsp.add_a(qd_buf)
+                qd_buf = b""
                         
             response = rsp.make_msg()
             print("RSP:",response)
