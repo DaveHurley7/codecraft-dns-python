@@ -39,7 +39,6 @@ class DNSMessage:
             self.flags |= val & 0x0100
         elif fname == RCODE:
             self.flags |= 0 if self.get_opcode() == 0 else 4
-        print("FLAGS:",self.flags.to_bytes(2))
             
     def get_opcode(self):
         return (self.flags & 0x7800) >> 11
@@ -117,7 +116,7 @@ def main():
                 rsp.add_a(qd_buf)
                         
             response = rsp.make_msg()
-            print(response)
+            print("RSP:",response)
             udp_socket.sendto(response, source)
         except Exception as e:
             print(f"Error receiving data: {e}")
