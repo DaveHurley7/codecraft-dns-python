@@ -98,6 +98,7 @@ def main():
                         while c < qd_len:
                             qd_buf += buf[msg_offset].to_bytes(1)
                             c += 1
+                            msg_offset += 1
                         bpos += 2
                     else:
                         lb_len = buf[bpos]
