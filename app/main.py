@@ -84,8 +84,6 @@ def main():
             rsp.set_flag(OPCODE,dmsg.flags)
             rsp.set_flag(RD,dmsg.flags)
             rsp.set_flag(RCODE)
-            rsp.qd_num = dmsg.qd_num
-            rsp.an_num = dmsg.qd_num
             
             bpos = 12
             qd_buf = b""
