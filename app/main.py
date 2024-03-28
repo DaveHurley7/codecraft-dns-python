@@ -39,7 +39,7 @@ class DNSMessage:
             self.flags |= val & 0x0100
         elif fname == RCODE:
             self.flags = 0 if self.get_opcode() == 0 else 4
-        print(self.flags.to_bytes(2))
+        print("FLAGS:",self.flags.to_bytes(2))
             
     def get_opcode(self):
         return (self.flags & 0x7800) >> 11
