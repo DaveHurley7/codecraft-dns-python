@@ -103,7 +103,7 @@ def main():
                         bpos += buf[bpos]+1
                         subbuf += buf[subbuf_start:bpos]
                 bpos += 1
-                print("DL:",subbuf[bpos-2:bpos+3])
+                print("CHECK:",subbuf[bpos-2:bpos+3])
                 subbuf += b"\x00" + buf[bpos:bpos+4]
                 print("WHOLE BUF:",subbuf)
                 bpos += 4
