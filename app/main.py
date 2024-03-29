@@ -95,7 +95,7 @@ def main():
                         while buf[sect_end]:
                             sect_end += 1
                         subbuf += buf[msg_offset:sect_end]
-                        bpos += 2
+                        bpos += 1
                         break
                     else:
                         subbuf_start = bpos
