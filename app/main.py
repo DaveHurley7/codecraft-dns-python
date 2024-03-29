@@ -96,6 +96,7 @@ def main():
                             sect_end += 1
                         subbuf += buf[msg_offset:sect_end]
                         bpos += 2
+                        print("DL:",subbuf[bpos-2:bpos+3])
                         break
                     else:
                         subbuf_start = bpos
@@ -103,6 +104,7 @@ def main():
                         subbuf += buf[subbuf_start:bpos]
                 bpos += 1
                 subbuf += b"\x00" + buf[bpos:bpos+4]
+                print("WHOLE BUF:",subbuf)
                 bpos += 4
                 rsp.add_q(subbuf)
                 rsp.add_a(subbuf)
