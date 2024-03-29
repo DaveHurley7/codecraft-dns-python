@@ -88,32 +88,27 @@ def main():
             bpos = 12
             qd_buf = b""
             for _ in range(dmsg.qd_num):
+                subbuf = b""
                 while buf[bpos]:
                     if buf[bpos] & 0xc0:
-                        msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff  #Get offset from pointer structure
-                        qd_len = buf[msg_offset]
-                        qd_buf += qd_len.to_bytes(1)
-                        msg_offset += 1
-                        c = 0
-                        while c < qd_len:
-                            qd_buf += buf[msg_offset].to_bytes(1)
-                            c += 1
-                            msg_offset += 1
+                        msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                        sect_end = msg_offset
+                        while buf[sect_end]:
+                            sect_end += 1
+                        subbuf += buf[msg_offset:sect_end]
                         bpos += 2
+                        break
                     else:
-                        lb_len = buf[bpos]
-                        qd_buf += buf[bpos].to_bytes(1)
-                        bpos += 1
-                        c = 0
-                        while c < lb_len:
-                            qd_buf += buf[bpos].to_bytes(1)
-                            c += 1
-                            bpos += 1
-                qd_buf += buf[bpos:bpos+5]
-                bpos += 5
+                        subbuf_start = bpos
+                        bpos += buf[bpos]+1
+                        subbuf += buf[subbuf_start:bpos]
+                bpos += 1
+                subbuf += b"\x00" + buf[bpos:bpos+4]
+                bpos += 4
                 rsp.add_q(qd_buf)
                 rsp.add_a(qd_buf)
                 qd_buf = b""
+                
                         
             response = rsp.make_msg()
             print("RSP:",response)
