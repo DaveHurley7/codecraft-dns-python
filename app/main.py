@@ -86,7 +86,6 @@ def main():
             rsp.set_flag(RCODE)
             
             bpos = 12
-            qd_buf = b""
             for _ in range(dmsg.qd_num):
                 subbuf = b""
                 while buf[bpos]:
@@ -105,8 +104,8 @@ def main():
                 bpos += 1
                 subbuf += b"\x00" + buf[bpos:bpos+4]
                 bpos += 4
-                rsp.add_q(qd_buf)
-                rsp.add_a(qd_buf)
+                rsp.add_q(subbuf)
+                rsp.add_a(subbuf)
                 qd_buf = b""
                 
                         
