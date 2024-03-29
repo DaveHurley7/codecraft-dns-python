@@ -102,9 +102,8 @@ def main():
                         bpos += buf[bpos]+1
                         subbuf += buf[subbuf_start:bpos]
                 bpos += 1
-                print("B:",subbuf)
                 subbuf += b"\x00" + buf[bpos:bpos+4]
-                print("A:",subbuf)
+                print("BUF_SECT",buf[bpos:bpos+4])
                 bpos += 4
                 rsp.add_q(subbuf)
                 rsp.add_a(subbuf)
