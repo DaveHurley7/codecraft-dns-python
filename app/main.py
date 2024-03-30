@@ -126,7 +126,6 @@ def main():
                             bpos += 5
                         dnsq.add_fwd_a(buf[bpos:])
                         if dnsq.qacountmatch():
-                            print("Q AND A COUNT MATCH")
                             response = dnsq.make_msg()
                             print("FINAL MSG:",response)
                             udp_socket.sendto(response,dnsq.client_addr)
