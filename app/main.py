@@ -135,7 +135,7 @@ def main():
                             udp_socket.sendto(response,dnsq.client_addr)
                             #del fwdqueries[dnsq.pid]
                         else:
-                            print("ERROR Q AND A COUNT")
+                            print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
                             
             else:
                 bpos = 12
