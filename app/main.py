@@ -112,6 +112,7 @@ def main():
                         dnsq = fwdqueries[qid]
                         dnsq.update_flags(bufhdr)
                         qd_num = int.from_bytes(bufhdr[4:6])
+                        print("QD_NUM:",qd_num)
                         for _ in range(qd_num):
                             while buf[bpos]:
                                 if buf[bpos] & 0xc0:
