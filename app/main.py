@@ -90,6 +90,7 @@ class DNSMessage:
         self.client_addr = c_addr
     
     def qacountmatch(self):
+        print("CHECKING ID:",self.pid)
         return self.qd_num == self.an_num
         
 
