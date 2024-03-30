@@ -114,7 +114,6 @@ def main():
                         dnsq = fwdqueries[qid]
                         dnsq.update_flags(bufhdr)
                         qd_num = int.from_bytes(bufhdr[4:6])
-                        print("QD_NUM:",qd_num)
                         bpos = 12
                         for _ in range(qd_num):
                             while buf[bpos]:
@@ -135,6 +134,8 @@ def main():
                             response = dnsq.make_msg()
                             print("FINAL MSG:",response)
                             udp_socket.sendto(response,dnsq.client_addr)
+                            dnsq.qd_num = 0
+                            dnsq.an_num = 0
                         else:
                             print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
                             
