@@ -84,7 +84,7 @@ class DNSMessage:
         fwdquery = self.get_header() + self.qtns[-1]
         fwdqueries[self.get_header()[:2]] = self
         print("BBB")
-        sk.sendto((addr,port),fwdquery)
+        sk.sendto(fwdquery,0,(addr,port))
         print("CCC")
         self.client = c_sk
         self.client_addr = (addr,port)
