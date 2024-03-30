@@ -105,7 +105,7 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             bufhdr = buf[:12]
             msgid = bufhdr[:2]
-            if msgid in fwdqueries.keys() and bufhdr[2] & 0x80 == 0x800:
+            if msgid in fwdqueries.keys(): # and bufhdr[2] & 0x80 == 0x800:
                 print("FROM SERVER:",buf)
                 for qid in fwdqueries.keys():
                     if qid == bufhdf[:2]:
