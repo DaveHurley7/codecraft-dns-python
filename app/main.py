@@ -124,6 +124,7 @@ def main():
                                     break
                                 else:
                                     bpos += buf[bpos]+1
+                                print("SO FAR:",buf[12:bpos])
                             bpos += 5
                         print("ANS SECT:",buf[bpos:])
                         dnsq.add_fwd_a(buf[bpos:])
