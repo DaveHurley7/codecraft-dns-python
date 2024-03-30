@@ -103,8 +103,7 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             bufhdr = buf[:12]
             msgid = bufhdr[:2]
-            if msgid in fwdqueries.keys(): # and bufhdr[2] & 0x80 == 0x800:
-                print("FROM SERVER:",buf)
+            if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
                         dnsq = fwdqueries[qid]
@@ -123,17 +122,16 @@ def main():
                                     bpos += buf[bpos]+1
                             bpos += 5
                         dnsq.add_fwd_a(buf[bpos:])
-                        print("CLIENT FWD ATTEMPT")
                         if dnsq.qacountmatch():
                             print("Q AND A COUNT MATCH")
                             response = dnsq.make_msg()
+                            print("FINAL MSG:",response)
                             udp_socket.sendto(response,dnsq.client_addr)
                             #del fwdqueries[dnsq.pid]
                         else:
                             print("ERROR Q AND A COUNT")
                             
             else:
-                print("FROM CLIENT:",buf)
                 bpos = 12
                 dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf)
