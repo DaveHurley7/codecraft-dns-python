@@ -125,7 +125,6 @@ def main():
                                     break
                                 else:
                                     bpos += buf[bpos]+1
-                                print("SO FAR:",buf[12:bpos])
                             bpos += 5
                         print("ANS SECT:",buf[bpos:])
                         dnsq.add_fwd_a(buf[bpos:])
@@ -133,7 +132,6 @@ def main():
                             response = dnsq.make_msg()
                             print("FINAL MSG:",response)
                             udp_socket.sendto(response,dnsq.client_addr)
-                            #del fwdqueries[dnsq.pid]
                         else:
                             print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
                             
@@ -162,7 +160,6 @@ def main():
                     bpos += 4
                     rsp.add_q(subbuf)
                     rsp.make_fwdquery(udp_socket,sys.argv[2],source)
-            print("QUERY IDS:",fwdqueries.keys())
             """
             bpos = 12
             dmsg = DNSMessage(buf)
