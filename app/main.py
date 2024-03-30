@@ -49,7 +49,7 @@ class DNSMessage:
         return (self.flags & 0x7800) >> 11
         
     def add_q(self,qbuf):
-        self.qtns.append([len(qbuf),qbuf])
+        self.qtns.append(qbuf)
         self.qd_num += 1
         
     def add_a(self,qbuf):
