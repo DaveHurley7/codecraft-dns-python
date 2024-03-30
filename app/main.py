@@ -83,6 +83,7 @@ class DNSMessage:
             exit()
         fwdquery = self.get_header() + self.qtns[-1]
         fwdqueries[self.get_header()[:2]] = self
+        print("MSG TO SERVER",fwdquery)
         sk.sendto(fwdquery,0,(addr,port))
         self.client = c_sk
         self.client_addr = (addr,port)
@@ -128,6 +129,7 @@ def main():
                             print("Q AND A COUNT MATCH")
                             response = dnsq.make_msg()
                             dnsq.client.sendto((dnsq.client_addr),response)
+                            
                         else:
                             print("ERROR Q AND A COUNT")
                             
