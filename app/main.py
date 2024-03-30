@@ -127,7 +127,8 @@ def main():
                                 else:
                                     bpos += buf[bpos]+1
                             bpos += 5
-                        print("ANS SECT:",buf[bpos:])
+                        for an in dsnq.awrs:
+                            print("ANSWER:",an)
                         dnsq.add_fwd_a(buf[bpos:])
                         if dnsq.qacountmatch():
                             response = dnsq.make_msg()
