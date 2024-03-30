@@ -144,6 +144,7 @@ def main():
                 dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf)
                 qd_num = int.from_bytes(bufhdr[4:6])
+                print("MSG FROM CLIENT:",buf)
                 for _ in range(qd_num):
                     subbuf = b""
                     while buf[bpos]:
