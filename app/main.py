@@ -108,6 +108,7 @@ def main():
             if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
+                        print("FROM SERVER:",buf)
                         dnsq = fwdqueries[qid]
                         dnsq.update_flags(bufhdr)
                         qd_num = int.from_bytes(bufhdr[4:6])
