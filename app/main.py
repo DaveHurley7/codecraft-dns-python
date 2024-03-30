@@ -1,9 +1,11 @@
-import socket
+import socket, sys
 
 QR = 0
 OPCODE = 1
 RD = 2
 RCODE = 3
+
+fwdqueries = {}
 
 class DNSMessage:
     def __init__(self,buffer=None):
@@ -26,9 +28,12 @@ class DNSMessage:
         self.qtns = []
         self.awrs = []
         self.ipbyte = 8
-        
+
     def get_header(self):
         return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
+    
+    def update_flags(self,fwd_buf):
+        self.flags = int.from_bytes(fwd_buf[2:4])
     
     def set_flag(self,fname,val=None):
         if fname == QR:
@@ -44,7 +49,7 @@ class DNSMessage:
         return (self.flags & 0x7800) >> 11
         
     def add_q(self,qbuf):
-        self.qtns.append(qbuf)
+        self.qtns.append([len(qbuf),qbuf])
         self.qd_num += 1
         
     def add_a(self,qbuf):
@@ -57,6 +62,10 @@ class DNSMessage:
         self.awrs.append(qbuf+ttl+dlen+data)
         self.an_num += 1
         
+    def add_fwd_a(self,qbuf):
+        self.awrs.append(qbuf)
+        self.an_num += 1
+        
     def make_msg(self):
         msg = self.get_header()
         for q in self.qtns:
@@ -64,6 +73,22 @@ class DNSMessage:
         for a in self.awrs:
             msg += a
         return msg
+    
+    def make_fwdquery(self,sk,fwdaddr,c_sk):
+        if ":" in fwdaddr:
+            addr, port = fwdaddr.split(":")
+            port = int(port)
+        else:
+            print("Error resolver info incorrect")
+            exit()
+        fwdquery = self.get_header() + self.qtns[-1]
+        fwdqueries[self.get_header()[:2]] = self
+        sk.sendto((addr,port),fwdquery)
+        self.client = c_sk
+        self.client_addr = (addr,port)
+    
+    def qacountmatch(self):
+        return self.qd_num == self.an_num
         
 
 def main():
@@ -76,6 +101,86 @@ def main():
     while True:
         try:
             buf, source = udp_socket.recvfrom(512)
+            bufhdr = buf[:12]
+            msgid = bufhdr[:2]
+            if msgid in fwdqueries.keys() and bufhdr[2] & 0x80 == 0x800:
+                for qid in fwdqueries.keys():
+                    if qid == bufhdf[:2]:
+                        fdwqueries[qid].update_flags(bufhdr)
+                        qd_num = int.from_bytes(bufhdr[4:6])
+                        for _ in range(qd_num):
+                            while buf[bpos]:
+                                if buf[bpos] & 0xc0:
+                                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                                    sect_end = msg_offset
+                                    while buf[sect_end]:
+                                        sect_end += 1
+                                    bpos += 1
+                                    break
+                                else:
+                                    bpos += buf[bpos]+1
+                            bpos += 5
+                        fq.add_fwd_a(buf[bpos:])
+                        if fq.qacountmatch():
+                            response = fq.make_msg()
+                            fq.client.sendto((fq.client_addr),response)
+                            
+            else:
+                bpos = 12
+                dmsg = DNSMessage(buf)
+                rsp = DNSMessage(buf)
+                qd_num = int.from_bytes(bufhdr[4:6])
+                for _ in range(qd_num):
+                    subbuf = b""
+                    while buf[bpos]:
+                        if buf[bpos] & 0xc0:
+                            msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                            sect_end = msg_offset
+                            while buf[sect_end]:
+                                sect_end += 1
+                            subbuf += buf[msg_offset:sect_end]
+                            bpos += 1
+                            break
+                        else:
+                            subbuf_start = bpos
+                            bpos += buf[bpos]+1
+                            subbuf += buf[subbuf_start:bpos]
+                    bpos += 1
+                    subbuf += b"\x00" + buf[bpos:bpos+4]
+                    bpos += 4
+                    rsp.add_q(subbuf)
+                    rsp.make_fwdquery(udp_socket,sys.argv[2],source)
+            """
+            bpos = 12
+            dmsg = DNSMessage(buf)
+            rsp = DNSMessage(buf)
+            qd_num = int.from_bytes(bufhdr[4:6])
+            for _ in range(qd_num):
+                subbuf = b""
+                while buf[bpos]:
+                    if buf[bpos] & 0xc0:
+                        msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                        sect_end = msg_offset
+                        while buf[sect_end]:
+                            sect_end += 1
+                        subbuf += buf[msg_offset:sect_end]
+                        bpos += 1
+                        break
+                    else:
+                        subbuf_start = bpos
+                        bpos += buf[bpos]+1
+                        subbuf += buf[subbuf_start:bpos]
+                bpos += 1
+                subbuf += b"\x00" + buf[bpos:bpos+4]
+                bpos += 4
+                rsp.add_q(subbuf)
+                rsl_flag = "--resolver"
+                if rsl_flag in sys.argv:
+                    forwarding = sys.argv.index(fsl_flag) + 1
+                    rsp.make_fwdquery(udp_socket,forwarding,source)
+                rsp.add_a(subbuf)
+                qd_buf = b""
+            
             print("CL_MSG:",buf)
             dmsg = DNSMessage(buf)
             rsp = DNSMessage()
@@ -103,16 +208,15 @@ def main():
                         subbuf += buf[subbuf_start:bpos]
                 bpos += 1
                 subbuf += b"\x00" + buf[bpos:bpos+4]
-                print("BUF_SECT",buf[bpos:bpos+4])
                 bpos += 4
                 rsp.add_q(subbuf)
                 rsp.add_a(subbuf)
                 qd_buf = b""
-                
+                """
                         
-            response = rsp.make_msg()
-            print("RSP:",response)
-            udp_socket.sendto(response, source)
+            #response = rsp.make_msg()
+            #print("RSP:",response)
+            #udp_socket.sendto(response, source)
         except Exception as e:
             print(f"Error receiving data: {e}")
             break
