@@ -64,6 +64,7 @@ class DNSMessage:
         
     def add_fwd_a(self,qbuf):
         self.awrs.append(qbuf)
+        print("ADDING ANSWER TO ID",self.pid)
         self.an_num += 1
         
     def make_msg(self):
