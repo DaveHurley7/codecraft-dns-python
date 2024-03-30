@@ -130,7 +130,7 @@ def main():
                         for an in dnsq.awrs:
                             print("ANSWER:",an)
                         dnsq.add_fwd_a(buf[bpos:])
-                        if dnsq.qacountmatch() or dnsq.an_num > dnsq.dq_num:
+                        if dnsq.qacountmatch() or dnsq.an_num > dnsq.qd_num:
                             response = dnsq.make_msg()
                             print("FINAL MSG:",response)
                             udp_socket.sendto(response,dnsq.client_addr)
