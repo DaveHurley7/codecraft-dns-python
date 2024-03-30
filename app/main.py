@@ -155,6 +155,7 @@ def main():
                     rsp.add_q(subbuf)
                     print("AAA")
                     rsp.make_fwdquery(udp_socket,sys.argv[2],source)
+            print("QUERY IDS:",fwdqueries.keys())
             """
             bpos = 12
             dmsg = DNSMessage(buf)
