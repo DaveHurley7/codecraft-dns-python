@@ -109,7 +109,8 @@ def main():
                 print("FROM SERVER:",buf)
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
-                        fwdqueries[qid].update_flags(bufhdr)
+                        dnsq = fwdqueries[qid]
+                        dnsq.update_flags(bufhdr)
                         qd_num = int.from_bytes(bufhdr[4:6])
                         for _ in range(qd_num):
                             while buf[bpos]:
@@ -123,10 +124,10 @@ def main():
                                 else:
                                     bpos += buf[bpos]+1
                             bpos += 5
-                        fq.add_fwd_a(buf[bpos:])
-                        if fq.qacountmatch():
-                            response = fq.make_msg()
-                            fq.client.sendto((fq.client_addr),response)
+                        dnsq.add_fwd_a(buf[bpos:])
+                        if dnsq.qacountmatch():
+                            response = dnsq.make_msg()
+                            dnsq.client.sendto((dnsq.client_addr),response)
                             
             else:
                 print("FROM CLIENT:",buf)
