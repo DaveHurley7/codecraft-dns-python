@@ -132,6 +132,7 @@ def main():
                 dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf)
                 qd_num = int.from_bytes(bufhdr[4:6])
+                print("AAA")
                 for _ in range(qd_num):
                     subbuf = b""
                     while buf[bpos]:
@@ -151,6 +152,7 @@ def main():
                     subbuf += b"\x00" + buf[bpos:bpos+4]
                     bpos += 4
                     rsp.add_q(subbuf)
+                    print("BBB")
                     rsp.make_fwdquery(udp_socket,sys.argv[2],source)
             """
             bpos = 12
