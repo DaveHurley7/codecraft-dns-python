@@ -74,7 +74,7 @@ class DNSMessage:
             msg += a
         return msg
     
-    def make_fwdquery(self,sk,fwdaddr,c_sk):
+    def make_fwdquery(self,sk,fwdaddr,c_addr):
         if ":" in fwdaddr:
             addr, port = fwdaddr.split(":")
             port = int(port)
@@ -85,8 +85,7 @@ class DNSMessage:
         fwdqueries[self.get_header()[:2]] = self
         print("MSG TO SERVER",fwdquery)
         sk.sendto(fwdquery,0,(addr,port))
-        self.client = c_sk
-        self.client_addr = (addr,port)
+        self.client_addr = c_addr
     
     def qacountmatch(self):
         return self.qd_num == self.an_num
@@ -128,7 +127,7 @@ def main():
                         if dnsq.qacountmatch():
                             print("Q AND A COUNT MATCH")
                             response = dnsq.make_msg()
-                            dnsq.client.sendto((dnsq.client_addr),response)
+                            udp_socket.sendto(response,dnsq.client_addr)
                             
                         else:
                             print("ERROR Q AND A COUNT")
