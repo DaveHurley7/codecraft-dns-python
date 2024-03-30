@@ -128,7 +128,7 @@ def main():
                             print("Q AND A COUNT MATCH")
                             response = dnsq.make_msg()
                             udp_socket.sendto(response,dnsq.client_addr)
-                            del fwdqueries[dns.get_pid()]
+                            del fwdqueries[dnsq.get_pid()]
                         else:
                             print("ERROR Q AND A COUNT")
                             
