@@ -109,7 +109,7 @@ def main():
                 print("FROM SERVER:",buf)
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
-                        fdwqueries[qid].update_flags(bufhdr)
+                        fwdqueries[qid].update_flags(bufhdr)
                         qd_num = int.from_bytes(bufhdr[4:6])
                         for _ in range(qd_num):
                             while buf[bpos]:
