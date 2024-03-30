@@ -104,6 +104,7 @@ def main():
             bufhdr = buf[:12]
             msgid = bufhdr[:2]
             if msgid in fwdqueries.keys() and bufhdr[2] & 0x80 == 0x800:
+                print("FROM SERVER:",buf)
                 for qid in fwdqueries.keys():
                     if qid == bufhdf[:2]:
                         fdwqueries[qid].update_flags(bufhdr)
@@ -126,6 +127,7 @@ def main():
                             fq.client.sendto((fq.client_addr),response)
                             
             else:
+                print("FROM CLIENT:",buf)
                 bpos = 12
                 dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf)
