@@ -83,9 +83,7 @@ class DNSMessage:
             exit()
         fwdquery = self.get_header() + self.qtns[-1]
         fwdqueries[self.get_header()[:2]] = self
-        print("BBB")
         sk.sendto(fwdquery,0,(addr,port))
-        print("CCC")
         self.client = c_sk
         self.client_addr = (addr,port)
     
@@ -125,9 +123,13 @@ def main():
                                     bpos += buf[bpos]+1
                             bpos += 5
                         dnsq.add_fwd_a(buf[bpos:])
+                        print("CLIENT FWD ATTEMPT")
                         if dnsq.qacountmatch():
+                            print("Q AND A COUNT MATCH")
                             response = dnsq.make_msg()
                             dnsq.client.sendto((dnsq.client_addr),response)
+                        else:
+                            print("ERROR Q AND A COUNT")
                             
             else:
                 print("FROM CLIENT:",buf)
@@ -154,7 +156,6 @@ def main():
                     subbuf += b"\x00" + buf[bpos:bpos+4]
                     bpos += 4
                     rsp.add_q(subbuf)
-                    print("AAA")
                     rsp.make_fwdquery(udp_socket,sys.argv[2],source)
             print("QUERY IDS:",fwdqueries.keys())
             """
