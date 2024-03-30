@@ -108,7 +108,7 @@ def main():
             if msgid in fwdqueries.keys(): # and bufhdr[2] & 0x80 == 0x800:
                 print("FROM SERVER:",buf)
                 for qid in fwdqueries.keys():
-                    if qid == bufhdf[:2]:
+                    if qid == bufhdr[:2]:
                         fdwqueries[qid].update_flags(bufhdr)
                         qd_num = int.from_bytes(bufhdr[4:6])
                         for _ in range(qd_num):
