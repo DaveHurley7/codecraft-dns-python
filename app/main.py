@@ -69,7 +69,7 @@ class DNSMessage:
     def make_msg(self):
         msg = self.get_header()
         for q in self.qtns:
-            msg += q
+            msg += q[1]
         for a in self.awrs:
             msg += a
         return msg
