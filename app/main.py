@@ -120,7 +120,8 @@ def main():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
                         print("FROM SERVER:",buf)
-                        udp_socket.sendto(buf,fwdqueries[qid].client)
+                        if buf[2] & 0x80:
+                            udp_socket.sendto(buf,fwdqueries[qid].client)
                         '''
                         print("FROM SERVER:",buf)
                         dnsq = fwdqueries[qid]
