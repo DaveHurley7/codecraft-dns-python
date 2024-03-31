@@ -93,6 +93,9 @@ class DNSMessage:
     def qacountmatch(self):
         print("CHECKING ID:",self.pid)
         return self.qd_num == self.an_num
+    
+    def send_raw_buf(self):
+        return self.buf
         
 
 def main():
@@ -145,6 +148,8 @@ def main():
                 rsp = DNSMessage(buf)
                 qd_num = int.from_bytes(bufhdr[4:6])
                 print("MSG FROM CLIENT:",buf)
+                udp_socket(rsp.get_raw_buf(),source)
+                '''
                 for _ in range(qd_num):
                     subbuf = b""
                     while buf[bpos]:
@@ -165,6 +170,7 @@ def main():
                     bpos += 4
                     rsp.add_q(subbuf)
                     rsp.make_fwdquery(udp_socket,sys.argv[2],source)
+                    '''
             """
             bpos = 12
             dmsg = DNSMessage(buf)
