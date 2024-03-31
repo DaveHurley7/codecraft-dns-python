@@ -116,11 +116,12 @@ def main():
             bufhdr = buf[:12]
             msgid = bufhdr[:2]
             print("FROM SOURCE:",source)
+            print("BUF:",buf)
             if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
-                        print("FROM SERVER:",buf)
                         if buf[2] & 0x80:
+                            print("TO CLIENT:",buf)
                             udp_socket.sendto(buf,fwdqueries[qid].client)
                         '''
                         print("FROM SERVER:",buf)
