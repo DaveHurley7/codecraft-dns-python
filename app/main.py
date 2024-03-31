@@ -130,14 +130,14 @@ def main():
                         for an in dnsq.awrs:
                             print("ANSWER:",an)
                         dnsq.add_fwd_a(buf[bpos:])
-                        if dnsq.qacountmatch() or dnsq.an_num > dnsq.qd_num:
-                            response = dnsq.make_msg()
-                            print("FINAL MSG:",response)
-                            udp_socket.sendto(response,dnsq.client_addr)
-                            dnsq.qd_num = 0
-                            dnsq.an_num = 0
-                        else:
-                            print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
+                        #if dnsq.qacountmatch() or dnsq.an_num > dnsq.qd_num:
+                        response = dnsq.make_msg()
+                        print("FINAL MSG:",response)
+                        udp_socket.sendto(response,dnsq.client_addr)
+                        dnsq.qd_num = 0
+                        dnsq.an_num = 0
+                        #else:
+                        #print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
                             
             else:
                 bpos = 12
