@@ -111,7 +111,6 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             bufhdr = buf[:12]
             msgid = bufhdr[:2]
-            print("BUF IN:",buf)
             if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
@@ -155,7 +154,7 @@ def main():
                 #qd_num = int.from_bytes(bufhdr[4:6])
                 print("FROM CLIENT:",buf)
                 fwdqueries[buf[:2]] = rsp
-                udp_socket.sendto(rsp.get_raw_buf(),source)
+                udp_socket.sendto(rsp.get_raw_buf(),sys.argv[2])
                 '''
                 for _ in range(qd_num):
                     subbuf = b""
