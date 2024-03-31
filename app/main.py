@@ -158,7 +158,7 @@ def main():
                 #qd_num = int.from_bytes(bufhdr[4:6])
                 print("FROM CLIENT:",buf)
                 fwdqueries[buf[:2]] = rsp
-                udp_socket.sendto(rsp.get_raw_buf(),socket_from_addr(sys.argv[2])
+                udp_socket.sendto(rsp.get_raw_buf(),socket_from_addr(sys.argv[2]))
                 '''
                 for _ in range(qd_num):
                     subbuf = b""
