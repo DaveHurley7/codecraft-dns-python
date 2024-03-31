@@ -115,6 +115,7 @@ def main():
             buf, source = udp_socket.recvfrom(512)
             bufhdr = buf[:12]
             msgid = bufhdr[:2]
+            print("INBUF:",buf)
             if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
