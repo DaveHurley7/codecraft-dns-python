@@ -8,7 +8,7 @@ RCODE = 3
 fwdqueries = {}
 
 class DNSMessage:
-    def __init__(self,buffer=None):
+    def __init__(self,buffer,src):
         if buffer:
             self.buf = buffer
             self.pid = buffer[:2]
@@ -28,6 +28,7 @@ class DNSMessage:
         self.qtns = []
         self.awrs = []
         self.ipbyte = 8
+        self.client = src
 
     def get_header(self):
         return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
@@ -88,13 +89,13 @@ class DNSMessage:
         fwdqueries[self.get_header()[:2]] = self
         print("MSG TO SERVER",fwdquery)
         sk.sendto(fwdquery,0,(addr,port))
-        self.client_addr = c_addr
+        #self.client_addr = c_addr
     
     def qacountmatch(self):
         print("CHECKING ID:",self.pid)
         return self.qd_num == self.an_num
     
-    def send_raw_buf(self):
+    def get_raw_buf(self):
         return self.buf
         
 
@@ -113,6 +114,8 @@ def main():
             if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
+                        udp_socket(buf,fwdqueries)
+                        '''
                         print("FROM SERVER:",buf)
                         dnsq = fwdqueries[qid]
                         dnsq.update_flags(bufhdr)
@@ -141,12 +144,13 @@ def main():
                         dnsq.an_num = 0
                         #else:
                         #print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
+                        '''
                             
             else:
-                bpos = 12
-                dmsg = DNSMessage(buf)
-                rsp = DNSMessage(buf)
-                qd_num = int.from_bytes(bufhdr[4:6])
+                #bpos = 12
+                #dmsg = DNSMessage(buf)
+                rsp = DNSMessage(buf,source)
+                #qd_num = int.from_bytes(bufhdr[4:6])
                 print("MSG FROM CLIENT:",buf)
                 udp_socket(rsp.get_raw_buf(),source)
                 '''
