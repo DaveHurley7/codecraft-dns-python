@@ -114,6 +114,7 @@ def main():
             if msgid in fwdqueries.keys():
                 for qid in fwdqueries.keys():
                     if qid == bufhdr[:2]:
+                        print("FROM SERVER:",buf)
                         udp_socket.sendto(buf,fwdqueries[qid].client)
                         '''
                         print("FROM SERVER:",buf)
@@ -151,7 +152,7 @@ def main():
                 #dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf,source)
                 #qd_num = int.from_bytes(bufhdr[4:6])
-                print("MSG FROM CLIENT:",buf)
+                print("FROM CLIENT:",buf)
                 udp_socket.sendto(rsp.get_raw_buf(),source)
                 '''
                 for _ in range(qd_num):
