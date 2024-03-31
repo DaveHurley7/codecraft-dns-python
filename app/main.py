@@ -159,7 +159,6 @@ def main():
                 #dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf,source)
                 #qd_num = int.from_bytes(bufhdr[4:6])
-                print("FROM CLIENT:",buf)
                 fwdqueries[buf[:2]] = rsp
                 udp_socket.sendto(rsp.get_raw_buf(),socket_from_addr(sys.argv[2]))
                 '''
