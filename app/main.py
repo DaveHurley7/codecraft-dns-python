@@ -250,6 +250,7 @@ def main():
             #response = rsp.make_msg()
             #print("RSP:",response)
             #udp_socket.sendto(response, source)
+            print("MSG HANDLED")
         except Exception as e:
             print(f"Error receiving data: {e}")
             break
