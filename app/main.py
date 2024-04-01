@@ -113,10 +113,10 @@ class DNSMessage:
             sk.sendto(query,fwdaddr)
             
     def parse_questions(self):
-        subbuf = b""
         bpos = 12
         qd_num = int.from_bytes(self.buf[4:6])
         for _ in range(qd_num):
+            subbuf = b""
             while self.buf[bpos]:
                 if self.buf[bpos] & 0xc0:
                     msg_offset = int.from_bytes(self.buf[bpos:bpos+2]) & 0x3fff
