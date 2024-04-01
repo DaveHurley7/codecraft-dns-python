@@ -35,7 +35,7 @@ class DNSMessage:
         self.client = src
 
     def get_header(self):
-        return self.pid + self.flags.to_bytes(2) + len(self.qtns).to_bytes(2) + len(awrs).to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
+        return self.pid + self.flags.to_bytes(2) + len(self.qtns).to_bytes(2) + len(self.awrs).to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
     def get_fwdhdr(self):
         qd_num = 1
