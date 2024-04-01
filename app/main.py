@@ -107,7 +107,7 @@ class DNSMessage:
         return self.buf
     
     def send_query(self,sk,fwdaddr):
-        header = get_forwarded_header()
+        header = self.get_forwarded_header()
         for q in range(qd_num):
             query = header + qtns[q]
             sk.sendto(query,fwaddr)
