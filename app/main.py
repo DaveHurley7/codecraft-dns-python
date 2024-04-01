@@ -139,8 +139,8 @@ class DNSMessage:
             
 def get_answer_from_server(sbuf):
     bpos = 12
-    while buf[bpos]:
-        if buf[bpos] & 0xc0:
+    while sbuf[bpos]:
+        if sbuf[bpos] & 0xc0:
             msg_offset = int.from_bytes(sbuf[bpos:bpos+2]) & 0x3fff
             sect_end = msg_offset
             while sbuf[sect_end]:
