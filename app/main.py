@@ -176,10 +176,9 @@ def main():
                 client = cdns.client
                 cdns.awrs.append(awr)
                 if cdns.qacountmatch():
-                    print("TO CLIENT:",client,"->",buf)
                     cdns.set_flag(QR)
                     response = cdns.make_msg()
-                    print("RESP SIZE:",len(response))
+                    print("TO CLIENT:",response)
                     udp_socket.sendto(response,client)
                     del fwdqueries[msgid]
                 '''
