@@ -40,7 +40,6 @@ class DNSMessage:
     def get_fwdhdr(self):
         qd_num = 1
         an_num = 1
-        print("HELLO")
         return self.pid + self.flags.to_bytes(2) + qd_num.to_bytes(2) + an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
     def update_flags(self,fwd_buf):
@@ -109,15 +108,16 @@ class DNSMessage:
     
     def send_query(self,sk,fwdaddr):
         header = self.get_fwdhdr()
-        print("CODE")
-        for q in range(qd_num):
-            query = header + qtns[q]
+        self.parse_questions()
+        for q in self.qtns:
+            query = header + q
             sk.sendto(query,fwaddr)
         
             
     def parse_questions(self):
         subbuf = b""
         bpos = 12
+        qd_num = int.to_bytes(buf[4:6])
         for _ in range(qd_num):
             while buf[bpos]:
                 if buf[bpos] & 0xc0:
