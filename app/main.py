@@ -117,7 +117,7 @@ class DNSMessage:
     def parse_questions(self):
         subbuf = b""
         bpos = 12
-        qd_num = int.to_bytes(buf[4:6])
+        qd_num = int.to_bytes(self.buf[4:6])
         for _ in range(qd_num):
             while buf[bpos]:
                 if buf[bpos] & 0xc0:
