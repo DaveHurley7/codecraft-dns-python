@@ -152,7 +152,6 @@ def get_answer_from_server(sbuf):
     bpos += 5
     return sbuf[bpos:]
             
-        
 
 def main():
     
@@ -175,6 +174,7 @@ def main():
                 cdns.awrs.append(awr)
                 if cdns.qacountmatch():
                     print("TO CLIENT:",client,"->",buf)
+                    cdns.set_flag(QR)
                     response = cdns.make_msg()
                     udp_socket.sendto(response,client)
                     del fwdqueries[msgid]
@@ -214,6 +214,7 @@ def main():
                 #dmsg = DNSMessage(buf)
                 rsp = DNSMessage(buf,source)
                 #qd_num = int.from_bytes(bufhdr[4:6])
+                
                 fwdqueries[buf[:2]] = rsp
                 rsp.send_query(udp_socket,socket_from_addr(sys.argv[2]))
                 '''
