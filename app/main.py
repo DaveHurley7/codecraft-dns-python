@@ -140,7 +140,7 @@ class DNSMessage:
 def get_answer_from_server(sbuf,client):
     bpos = 12
     rcode = sbuf[4] & 0xf
-    client.set_flag(RCODE,val)
+    client.set_flag(RCODE,rcode)
     if bpos < len(sbuf):
         while sbuf[bpos]:
             if sbuf[bpos] & 0xc0:
