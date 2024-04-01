@@ -101,7 +101,7 @@ class DNSMessage:
     
     def qacountmatch(self):
         print("CHECKING ID:",self.pid)
-        return len(qtns) == len(awrs)
+        return len(self.qtns) == len(self.awrs)
     
     def get_raw_buf(self):
         return self.buf
