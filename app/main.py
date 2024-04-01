@@ -61,6 +61,7 @@ class DNSMessage:
     def add_q(self,qbuf):
         self.qtns.append(qbuf)
         self.qd_num += 1
+        print("Q ADDED, ",self.qtns)
         
     def add_a(self,qbuf):
         ttlv = 60
@@ -71,19 +72,17 @@ class DNSMessage:
         self.ipbyte += 1
         self.awrs.append(qbuf+ttl+dlen+data)
         self.an_num += 1
+        print("A ADDED",self.awrs)
         
     def add_fwd_a(self,qbuf):
         self.awrs.append(qbuf)
-        print("ADDING ANSWER TO ID",self.pid)
         self.an_num += 1
         
     def make_msg(self):
         msg = self.get_header()
         for q in self.qtns:
-            print("Adding question:",q)
             msg += q
         for a in self.awrs:
-            print("Adding answer:",a)
             msg += a
         return msg
     
