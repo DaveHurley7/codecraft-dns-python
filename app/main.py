@@ -171,7 +171,7 @@ def main():
                 awr = get_answer_from_server(buf)
                 client = cdns.client
                 cdns.awrs.append(awr)
-                if cdns.qacountmatch()
+                if cdns.qacountmatch():
                     print("TO CLIENT:",client,"->",buf)
                     response = cdns.make_msg()
                     udp_socket.sendto(response,client)
