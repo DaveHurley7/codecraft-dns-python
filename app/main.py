@@ -118,7 +118,7 @@ def main():
             print("FROM SOURCE:",source)
             print("BUF:",buf)
             if msgid in fwdqueries.keys():
-                client = fwdqueries[qid].client
+                client = fwdqueries[msgid].client
                 print("TO CLIENT:",client,"->",buf)
                 udp_socket.sendto(buf,client)
                 del fwdqueries[msgid]
