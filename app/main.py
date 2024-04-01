@@ -137,7 +137,7 @@ class DNSMessage:
             bpos += 4
             self.qtns.append(subbuf)
             
-def get_answer_from_server(self,sbuf):
+def get_answer_from_server(sbuf):
     bpos = 12
     while buf[bpos]:
         if buf[bpos] & 0xc0:
