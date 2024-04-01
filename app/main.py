@@ -134,6 +134,7 @@ class DNSMessage:
             subbuf += b"\x00" + self.buf[bpos:bpos+4]
             bpos += 4
             self.qtns.append(subbuf)
+            print("QUESTIONS:",self.qtns)
             
 def get_answer_from_server(sbuf,client):
     bpos = 12
@@ -174,6 +175,7 @@ def main():
                 awr = get_answer_from_server(buf,cdns)
                 client = cdns.client
                 cdns.awrs.append(awr)
+                print("ANSWERS:",cdns.awrs)
                 if cdns.qacountmatch():
                     cdns.set_flag(QR)
                     response = cdns.make_msg()
