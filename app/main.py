@@ -79,6 +79,7 @@ class DNSMessage:
         
     def make_msg(self):
         msg = self.get_header()
+        print("MSG SIZE:",len(msg))
         for q in self.qtns:
             print("Adding question:",q)
             msg += q
@@ -112,7 +113,6 @@ class DNSMessage:
         for q in self.qtns:
             query = header + q
             sk.sendto(query,fwdaddr)
-        
             
     def parse_questions(self):
         subbuf = b""
