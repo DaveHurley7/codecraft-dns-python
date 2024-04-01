@@ -137,8 +137,10 @@ class DNSMessage:
             bpos += 4
             self.qtns.append(subbuf)
             
-def get_answer_from_server(sbuf):
+def get_answer_from_server(sbuf,client):
     bpos = 12
+    rcode = sbuf[4] & 0xf
+    client.set_flag(RCODE,val)
     if bpos < len(sbuf):
         while sbuf[bpos]:
             if sbuf[bpos] & 0xc0:
@@ -171,7 +173,7 @@ def main():
             print("BUF:",buf)
             if msgid in fwdqueries.keys():
                 cdns = fwdqueries[msgid]
-                awr = get_answer_from_server(buf)
+                awr = get_answer_from_server(buf,cdns)
                 client = cdns.client
                 cdns.awrs.append(awr)
                 if cdns.qacountmatch():
