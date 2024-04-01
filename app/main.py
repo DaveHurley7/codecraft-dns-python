@@ -79,7 +79,6 @@ class DNSMessage:
         
     def make_msg(self):
         msg = self.get_header()
-        print("MSG SIZE:",len(msg))
         for q in self.qtns:
             print("Adding question:",q)
             msg += q
@@ -180,6 +179,7 @@ def main():
                     print("TO CLIENT:",client,"->",buf)
                     cdns.set_flag(QR)
                     response = cdns.make_msg()
+                    print("RESP SIZE:",len(response))
                     udp_socket.sendto(response,client)
                     del fwdqueries[msgid]
                 '''
