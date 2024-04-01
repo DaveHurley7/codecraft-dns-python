@@ -122,36 +122,36 @@ def main():
                 print("TO CLIENT:",client,"->",buf)
                 udp_socket.sendto(buf,client)
                 del fwdqueries[msgid]
-                        '''
-                        print("FROM SERVER:",buf)
-                        dnsq = fwdqueries[qid]
-                        dnsq.update_flags(bufhdr)
-                        qd_num = int.from_bytes(bufhdr[4:6])
-                        bpos = 12
-                        for _ in range(qd_num):
-                            while buf[bpos]:
-                                if buf[bpos] & 0xc0:
-                                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
-                                    sect_end = msg_offset
-                                    while buf[sect_end]:
-                                        sect_end += 1
-                                    bpos += 1
-                                    break
-                                else:
-                                    bpos += buf[bpos]+1
-                            bpos += 5
-                        for an in dnsq.awrs:
-                            print("ANSWER:",an)
-                        dnsq.add_fwd_a(buf[bpos:])
-                        #if dnsq.qacountmatch() or dnsq.an_num > dnsq.qd_num:
-                        response = dnsq.make_msg()
-                        print("FINAL MSG:",response)
-                        udp_socket.sendto(response,dnsq.client_addr)
-                        dnsq.qd_num = 0
-                        dnsq.an_num = 0
-                        #else:
-                        #print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
-                        '''
+                '''
+                print("FROM SERVER:",buf)
+                dnsq = fwdqueries[qid]
+                dnsq.update_flags(bufhdr)
+                qd_num = int.from_bytes(bufhdr[4:6])
+                bpos = 12
+                for _ in range(qd_num):
+                    while buf[bpos]:
+                        if buf[bpos] & 0xc0:
+                            msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                            sect_end = msg_offset
+                            while buf[sect_end]:
+                                sect_end += 1
+                            bpos += 1
+                            break
+                        else:
+                            bpos += buf[bpos]+1
+                    bpos += 5
+                for an in dnsq.awrs:
+                    print("ANSWER:",an)
+                dnsq.add_fwd_a(buf[bpos:])
+                #if dnsq.qacountmatch() or dnsq.an_num > dnsq.qd_num:
+                response = dnsq.make_msg()
+                print("FINAL MSG:",response)
+                udp_socket.sendto(response,dnsq.client_addr)
+                dnsq.qd_num = 0
+                dnsq.an_num = 0
+                #else:
+                #print("MISMATCH:",dnsq.qd_num,dnsq.an_num)
+                '''
                             
             else:
                 #bpos = 12
