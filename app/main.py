@@ -37,7 +37,7 @@ class DNSMessage:
     def get_header(self):
         return self.pid + self.flags.to_bytes(2) + len(self.qtns).to_bytes(2) + len(awrs).to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
-    def get_fowarded_header(self):
+    def get_fwdhdr(self):
         qd_num = 1
         an_num = 1
         return self.pid + self.flags.to_bytes(2) + qd_num.to_bytes(2) + an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
@@ -107,7 +107,7 @@ class DNSMessage:
         return self.buf
     
     def send_query(self,sk,fwdaddr):
-        header = self.get_forwarded_header()
+        header = self.get_fwdhdr()
         for q in range(qd_num):
             query = header + qtns[q]
             sk.sendto(query,fwaddr)
