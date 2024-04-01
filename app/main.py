@@ -17,10 +17,10 @@ class DNSMessage:
             self.buf = buffer
             self.pid = buffer[:2]
             self.flags = int.from_bytes(buffer[2:4])
-            self.qd_num = 0 #int.from_bytes(buffer[4:6])
-            self.an_num = 0 #int.from_bytes(buffer[6:8])
-            self.ns_num = 0 #int.from_bytes(buffer[8:10])
-            self.ar_num = 0 #int.from_bytes(buffer[10:12])
+            self.qd_num = int.from_bytes(buffer[4:6])
+            self.an_num = int.from_bytes(buffer[6:8])
+            self.ns_num = int.from_bytes(buffer[8:10])
+            self.ar_num = int.from_bytes(buffer[10:12])
         else:
             self.buf = b"\x00"*12
             self.pid = b"\x00\x00"
@@ -35,7 +35,12 @@ class DNSMessage:
         self.client = src
 
     def get_header(self):
-        return self.pid + self.flags.to_bytes(2) + self.qd_num.to_bytes(2) + self.an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
+        return self.pid + self.flags.to_bytes(2) + len(self.qtns).to_bytes(2) + len(awrs).to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
+    
+    def get_fowarded_header(self):
+        qd_num = 1
+        an_num = 1
+        return self.pid + self.flags.to_bytes(2) + qd_num.to_bytes(2) + an_num.to_bytes(2) + self.ns_num.to_bytes(2) + self.ar_num.to_bytes(2) 
     
     def update_flags(self,fwd_buf):
         self.flags = int.from_bytes(fwd_buf[2:4])
@@ -93,14 +98,58 @@ class DNSMessage:
         fwdqueries[self.get_header()[:2]] = self
         print("MSG TO SERVER",fwdquery)
         sk.sendto(fwdquery,0,(addr,port))
-        #self.client_addr = c_addr
     
     def qacountmatch(self):
         print("CHECKING ID:",self.pid)
-        return self.qd_num == self.an_num
+        return len(qtns) == len(awrs)
     
     def get_raw_buf(self):
         return self.buf
+    
+    def send_query(self,sk,fwdaddr):
+        header = get_forwarded_header
+        for q in range(qd_num):
+            query = header + qtns[q]
+            sk.sendto(query,fwaddr)
+        
+            
+    def parse_questions(self):
+        subbuf = b""
+        bpos = 12
+        for _ in range(qd_num):
+            while buf[bpos]:
+                if buf[bpos] & 0xc0:
+                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+                    sect_end = msg_offset
+                    while buf[sect_end]:
+                        sect_end += 1
+                    subbuf += buf[msg_offset:sect_end]
+                    bpos += 1
+                    break
+                else:
+                    subbuf_start = bpos
+                    bpos += buf[bpos]+1
+                    subbuf += buf[subbuf_start:bpos]
+            bpos += 1
+            subbuf += b"\x00" + buf[bpos:bpos+4]
+            bpos += 4
+            self.qtns.append(subbuf)
+            
+def get_answer_from_server(self,sbuf):
+    bpos = 12
+    while buf[bpos]:
+        if buf[bpos] & 0xc0:
+            msg_offset = int.from_bytes(sbuf[bpos:bpos+2]) & 0x3fff
+            sect_end = msg_offset
+            while sbuf[sect_end]:
+                sect_end += 1
+            bpos += 1
+            break
+        else:
+            bpos += sbuf[bpos]+1
+    bpos += 5
+    return sbuf[bpos:]
+            
         
 
 def main():
@@ -118,10 +167,15 @@ def main():
             print("FROM SOURCE:",source)
             print("BUF:",buf)
             if msgid in fwdqueries.keys():
-                client = fwdqueries[msgid].client
-                print("TO CLIENT:",client,"->",buf)
-                udp_socket.sendto(buf,client)
-                del fwdqueries[msgid]
+                cdns = fwdqueries[msgid]
+                awr = get_answer_from_server(buf)
+                client = cdns.client
+                cdns.awrs.append(awr)
+                if cdns.qacountmatch()
+                    print("TO CLIENT:",client,"->",buf)
+                    response = cdns.make_msg()
+                    udp_socket.sendto(response,client)
+                    del fwdqueries[msgid]
                 '''
                 print("FROM SERVER:",buf)
                 dnsq = fwdqueries[qid]
@@ -159,7 +213,7 @@ def main():
                 rsp = DNSMessage(buf,source)
                 #qd_num = int.from_bytes(bufhdr[4:6])
                 fwdqueries[buf[:2]] = rsp
-                udp_socket.sendto(rsp.get_raw_buf(),socket_from_addr(sys.argv[2]))
+                rsp.send_query(udp_socket,socket_from_addr(sys.argv[2]))
                 '''
                 for _ in range(qd_num):
                     subbuf = b""
