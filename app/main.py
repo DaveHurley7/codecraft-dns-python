@@ -119,21 +119,21 @@ class DNSMessage:
         bpos = 12
         qd_num = int.from_bytes(self.buf[4:6])
         for _ in range(qd_num):
-            while buf[bpos]:
-                if buf[bpos] & 0xc0:
-                    msg_offset = int.from_bytes(buf[bpos:bpos+2]) & 0x3fff
+            while self.buf[bpos]:
+                if self.buf[bpos] & 0xc0:
+                    msg_offset = int.from_bytes(self.buf[bpos:bpos+2]) & 0x3fff
                     sect_end = msg_offset
-                    while buf[sect_end]:
+                    while self.buf[sect_end]:
                         sect_end += 1
-                    subbuf += buf[msg_offset:sect_end]
+                    subbuf += self.buf[msg_offset:sect_end]
                     bpos += 1
                     break
                 else:
                     subbuf_start = bpos
-                    bpos += buf[bpos]+1
-                    subbuf += buf[subbuf_start:bpos]
+                    bpos += self.buf[bpos]+1
+                    subbuf += self.buf[subbuf_start:bpos]
             bpos += 1
-            subbuf += b"\x00" + buf[bpos:bpos+4]
+            subbuf += b"\x00" + self.buf[bpos:bpos+4]
             bpos += 4
             self.qtns.append(subbuf)
             
