@@ -111,7 +111,7 @@ class DNSMessage:
         self.parse_questions()
         for q in self.qtns:
             query = header + q
-            sk.sendto(query,fwaddr)
+            sk.sendto(query,fwdaddr)
         
             
     def parse_questions(self):
